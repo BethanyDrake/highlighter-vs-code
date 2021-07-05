@@ -25,6 +25,29 @@ function activate(context) {
 	});
 
 	context.subscriptions.push(disposable);
+	vscode.window.onDidChangeActiveTextEditor(updateDecorations, null, context.subscriptions);
+
+	function updateDecorations(activeEditor) {
+
+		try {
+			
+			var decorationOptions = {
+				range: new vscode.Range(2, 3, 2, 10)
+			};
+
+			var decoration = vscode.window.createTextEditorDecorationType({
+				backgroundColor: "#005500"
+			});
+		
+			activeEditor.setDecorations(decoration, [decorationOptions]);
+
+		} catch(e) {
+			console.log(e.message);
+			console.log(e.stack);
+			vscode.window.showErrorMessage("highlighting failed");
+		}
+
+	}
 }
 
 // this method is called when your extension is deactivated
