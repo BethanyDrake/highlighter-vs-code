@@ -18,8 +18,23 @@
 			{
 				"command": "highlighter.helloWorld",
 				"title": "Hello World"
+			},
+			{
+				"command": "highlighter.addFile",
+				"title": "Enable highlighting for this file"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Highlighter",
+			"properties": {
+				"highlighter.enabledFiles": {
+				  "type": "array",
+				  "default":[],
+				  "description": "Files with highlighting enabled."
+				}
+			}
+
+		}
 	},
 	"scripts": {
 		"lint": "eslint .",
