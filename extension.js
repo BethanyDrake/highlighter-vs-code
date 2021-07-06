@@ -5,6 +5,13 @@ const vscode = require('vscode');
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
+
+function getRange(document, startIndex, endIndex){
+	var startPos = document.positionAt(startIndex);
+	var endPos = document.positionAt(endIndex);
+	return new vscode.Range(startPos, endPos);
+}
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -30,16 +37,31 @@ function activate(context) {
 	function updateDecorations(activeEditor) {
 
 		try {
-			
-			var decorationOptions = {
-				range: new vscode.Range(2, 3, 2, 10)
-			};
+			var text = activeEditor.document.getText();
+
+			var isHighlighting = false;
+			var startIndex = -1;
+			var endIndex = -1;
+
+			var decorationOptions = [];
+
+			[...text].forEach((char, i) => {
+				if (char == '[') {
+					startIndex = i;
+					isHighlighting = true;
+				}
+				if (isHighlighting && char == ']') {
+					endIndex = i;
+					isHighlighting = false;
+					decorationOptions.push({range: getRange(activeEditor.document, startIndex, endIndex+1)})
+				}
+			});
 
 			var decoration = vscode.window.createTextEditorDecorationType({
-				backgroundColor: "#005500"
+				backgroundColor: "#E1BEE7"
 			});
 		
-			activeEditor.setDecorations(decoration, [decorationOptions]);
+			activeEditor.setDecorations(decoration, decorationOptions);
 
 		} catch(e) {
 			console.log(e.message);
